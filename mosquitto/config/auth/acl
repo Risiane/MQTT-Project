@@ -1,0 +1,17 @@
+# MQTT Access Control List
+# Format: user <username>
+#         topic [read|write] <topic_pattern>
+
+# Sensor user can only publish to sensor topics
+user sensor_user
+topic write sensor/+
+
+# Subscriber user can only read from sensor topics  
+user subscriber_user
+topic read sensor/+
+
+# Admin user has full access to all topics
+user admin_user
+topic readwrite #
+
+# Deny anonymous access (this will be enforced by allow_anonymous false)

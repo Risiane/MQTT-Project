@@ -11,6 +11,10 @@ INTERVAL    = float(os.getenv("INTERVAL_SECONDS", "5"))
 QOS         = int(os.getenv("QOS", "0"))
 RETAIN      = os.getenv("RETAIN", "false").lower() == "true"
 
+# Authentication credentials
+MQTT_USERNAME = os.getenv("MQTT_USERNAME", "mqttsensoruser")
+MQTT_PASSWORD = os.getenv("MQTT_PASSWORD", "sensor@mqtt")
+
 def generate_temperature():
     value = getattr(generate_temperature, "_val", 22.0)
     step = random.uniform(-0.5, 0.7)
@@ -28,6 +32,10 @@ def main():
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     client.on_connect = on_connect
     client.on_disconnect = on_disconnect
+    
+    # Set authentication credentials
+    client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
+    
     client.reconnect_delay_set(min_delay=1, max_delay=30)
     client.connect(BROKER_HOST, BROKER_PORT, keepalive=30)
     client.loop_start()

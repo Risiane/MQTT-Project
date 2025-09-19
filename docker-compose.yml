@@ -6,8 +6,11 @@ services:
     container_name: mqtt-broker
     ports:
       - "1883:1883"
+      - "8883:8883"
     volumes:
       - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./mosquitto/config/auth:/mosquitto/config/auth
+      - ./mosquitto/config/certs:/mosquitto/config/certs
       - mosquitto_data:/mosquitto/data
       - mosquitto_log:/mosquitto/log
     restart: unless-stopped
@@ -28,6 +31,8 @@ services:
       INTERVAL_SECONDS: "5"
       QOS: "0"
       RETAIN: "false"
+      MQTT_USERNAME: mqttsensoruser
+      MQTT_PASSWORD: sensor@mqtt
     restart: unless-stopped
     networks:
       - mqtt_network
@@ -38,7 +43,7 @@ services:
     depends_on:
       - mqtt-broker
     command: >
-      sh -c "mosquitto_sub -h mqtt-broker -t sensor/# -v"
+      sh -c "mosquitto_sub -h mqtt-broker -t sensor/# -u mqttsubscriberuser -P subscriber@mqtt -v"
     networks:
       - mqtt_network
     restart: unless-stopped
