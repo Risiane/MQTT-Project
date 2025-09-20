@@ -48,7 +48,7 @@ topic write sensor/+
 user mqttsubscriberuser  
 topic read sensor/+  
 user mqttadminuser  
-topic readwrite #' > mosquitto/config/auth/acl
+topic readwrite > mosquitto/config/auth/acl
 
 3. Gerar certificados
 
@@ -63,7 +63,7 @@ openssl x509 -req -in mosquitto/config/certs/server.csr -CA mosquitto/config/cer
 
 4. Configuração mosquitto.conf
 
-echo 'listener 1883  
+echo listener 1883  
 listener 8883  
 cafile /mosquitto/config/certs/ca.crt  
 certfile /mosquitto/config/certs/server.crt  
