@@ -34,6 +34,7 @@ Implementação de um broker MQTT com autenticação, autorização e criptograf
 ## Implementação e Teste
 ```bash
 1. Criar usuários
+
 Criação de diretório de autenticação:  
 `mkdir -p mosquitto/config/auth`  
 
@@ -41,6 +42,7 @@ Comando para gerar hash de senha:
 `docker run --rm eclipse-mosquitto:2.0.20 sh -c "mosquitto_passwd -c -b /tmp/passwd mqttsensoruser sensor@mqtt && mosquitto_passwd -b /tmp/passwd mqttsubscriberuser subscriber@mqtt && mosquitto_passwd -b /tmp/passwd mqttadminuser admin@mqtt && cat /tmp/passwd"`  
 
 2. Criar ACL
+
 echo user mqttsensoruser  
 topic write sensor/+  
 user mqttsubscriberuser  
@@ -49,8 +51,10 @@ user mqttadminuser
 topic readwrite #' > mosquitto/config/auth/acl
 
 3. Gerar certificados
+
 Criar pasta onde ficará os certificados:    
-`mkdir -p mosquitto/config/certs`  
+`mkdir -p mosquitto/config/certs`
+ 
 Comandos para gerar os certificados:  
 `openssl req -new -x509 -days 365 -nodes -out mosquitto/config/certs/ca.crt -keyout mosquitto/config/certs/ca.key -subj "/C=BR/ST=SP/L=SaoPaulo/O=MQTT-Security/OU=IT/CN=MQTT-CA"`  
 `openssl genrsa -out mosquitto/config/certs/server.key 2048`  
@@ -58,6 +62,7 @@ Comandos para gerar os certificados:
 `openssl x509 -req -in mosquitto/config/certs/server.csr -CA mosquitto/config/certs/ca.crt -CAkey mosquitto/config/certs/ca.key -CAcreateserial -out mosquitto/config/certs/server.crt -days 365`  
 
 4. Configuração mosquitto.conf
+
 echo 'listener 1883  
 listener 8883  
 cafile /mosquitto/config/certs/ca.crt  
@@ -68,6 +73,7 @@ password_file /mosquitto/config/auth/passwd
 acl_file /mosquitto/config/auth/acl' > mosquitto/config/mosquitto.conf  
 
 5. Subir e testar
+
 Iniciar o sistema:  
 `docker compose up -d --build`  
 `docker compose logs -f mqtt-subscriber`  
