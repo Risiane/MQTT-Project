@@ -39,17 +39,12 @@ Implementação de um broker MQTT com autenticação, autorização e criptograf
 `docker run --rm eclipse-mosquitto:2.0.20 sh -c "mosquitto_passwd -c -b /tmp/passwd mqttsensoruser sensor@mqtt && mosquitto_passwd -b /tmp/passwd mqttsubscriberuser subscriber@mqtt && mosquitto_passwd -b /tmp/passwd mqttadminuser admin@mqtt && cat /tmp/passwd"`
 
 ## 2. Criar ACL
-`echo 'user mqttsensoruser`
-
-`topic write sensor/+`
-
-`user mqttsubscriberuser`
-
-`topic read sensor/+`
-
-`user mqttadminuser`
-
-`topic readwrite #' > mosquitto/config/auth/acl`
+echo 'user mqttsensoruser
+topic write sensor/+
+user mqttsubscriberuser
+topic read sensor/+
+user mqttadminuser
+topic readwrite #' > mosquitto/config/auth/acl
 
 ## 3. Gerar certificados
 `mkdir -p mosquitto/config/certs`
@@ -63,21 +58,14 @@ Implementação de um broker MQTT com autenticação, autorização e criptograf
 `openssl x509 -req -in mosquitto/config/certs/server.csr -CA mosquitto/config/certs/ca.crt -CAkey mosquitto/config/certs/ca.key -CAcreateserial -out mosquitto/config/certs/server.crt -days 365`
 
 ## 4. Configuração mosquitto.conf
-`echo 'listener 1883`
-
-`listener 8883`
-
-`cafile /mosquitto/config/certs/ca.crt`
-
-`certfile /mosquitto/config/certs/server.crt`
-
-`keyfile /mosquitto/config/certs/server.key`
-
-`allow_anonymous false`
-
-`password_file /mosquitto/config/auth/passwd`
-
-`acl_file /mosquitto/config/auth/acl' > mosquitto/config/mosquitto.conf`
+echo 'listener 1883
+listener 8883
+cafile /mosquitto/config/certs/ca.crt
+certfile /mosquitto/config/certs/server.crt
+keyfile /mosquitto/config/certs/server.key
+allow_anonymous false
+password_file /mosquitto/config/auth/passwd
+acl_file /mosquitto/config/auth/acl' > mosquitto/config/mosquitto.conf
 
 ## 5. Subir e testar
 `docker compose up -d --build`
