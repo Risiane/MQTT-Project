@@ -34,8 +34,10 @@ Implementação de um broker MQTT com autenticação, autorização e criptograf
 ## Implementação e Teste
 
 ## 1. Criar usuários
+Criação de diretório de autenticação:  
 `mkdir -p mosquitto/config/auth`
 
+Comando para gerar hash de senha:  
 `docker run --rm eclipse-mosquitto:2.0.20 sh -c "mosquitto_passwd -c -b /tmp/passwd mqttsensoruser sensor@mqtt && mosquitto_passwd -b /tmp/passwd mqttsubscriberuser subscriber@mqtt && mosquitto_passwd -b /tmp/passwd mqttadminuser admin@mqtt && cat /tmp/passwd"`
 
 ## 2. Criar ACL
@@ -79,5 +81,5 @@ Iniciar o sistema:
 Teste não criptografado:  
 `docker run --rm eclipse-mosquitto:2.0.20 mosquitto_pub -h 172.16.39.60 -p 1883 -t sensor/test -m "teste não criptografado" -u mqttadminuser -P admin@mqtt`
 
-Teste criptografado:
+Teste criptografado:  
 `docker run --rm -v $(pwd)/mosquitto/config/certs:/tmp/certs eclipse-mosquitto:2.0.20 mosquitto_pub -h 172.16.39.60 -p 8883 -t sensor/test -m "teste criptografado" -u mqttadminuser -P admin@mqtt --cafile /tmp/certs/ca.crt`
