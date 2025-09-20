@@ -70,7 +70,7 @@ certfile /mosquitto/config/certs/server.crt
 keyfile /mosquitto/config/certs/server.key  
 allow_anonymous false  
 password_file /mosquitto/config/auth/passwd   
-acl_file /mosquitto/config/auth/acl' > mosquitto/config/mosquitto.conf  
+acl_file /mosquitto/config/auth/acl > mosquitto/config/mosquitto.conf  
 
 5. Subir e testar
 
