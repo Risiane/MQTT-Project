@@ -40,11 +40,11 @@ Implementação de um broker MQTT com autenticação, autorização e criptograf
 
 ## 2. Criar ACL
 
-echo user mqttsensoruser
-topic write sensor/+
-user mqttsubscriberuser
-topic read sensor/+
-user mqttadminuser
+echo user mqttsensoruser  
+topic write sensor/+  
+user mqttsubscriberuser  
+topic read sensor/+  
+user mqttadminuser  
 topic readwrite #' > mosquitto/config/auth/acl
 
 ## 3. Gerar certificados
