@@ -47,8 +47,10 @@ user mqttadminuser
 topic readwrite #' > mosquitto/config/auth/acl
 
 ## 3. Gerar certificados
+Criar pasta onde ficará os certificados:
 `mkdir -p mosquitto/config/certs`
 
+Comandos para gerar os certificados:
 `openssl req -new -x509 -days 365 -nodes -out mosquitto/config/certs/ca.crt -keyout mosquitto/config/certs/ca.key -subj "/C=BR/ST=SP/L=SaoPaulo/O=MQTT-Security/OU=IT/CN=MQTT-CA"`
 
 `openssl genrsa -out mosquitto/config/certs/server.key 2048`
@@ -68,10 +70,13 @@ password_file /mosquitto/config/auth/passwd
 acl_file /mosquitto/config/auth/acl' > mosquitto/config/mosquitto.conf
 
 ## 5. Subir e testar
+Iniciar o sistema:
 `docker compose up -d --build`
 
 `docker compose logs -f mqtt-subscriber`
 
+Teste não criptografado:
 `docker run --rm eclipse-mosquitto:2.0.20 mosquitto_pub -h 172.16.39.60 -p 1883 -t sensor/test -m "teste não criptografado" -u mqttadminuser -P admin@mqtt`
 
+Teste criptografado:
 `docker run --rm -v $(pwd)/mosquitto/config/certs:/tmp/certs eclipse-mosquitto:2.0.20 mosquitto_pub -h 172.16.39.60 -p 8883 -t sensor/test -m "teste criptografado" -u mqttadminuser -P admin@mqtt --cafile /tmp/certs/ca.crt`
