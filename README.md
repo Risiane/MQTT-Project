@@ -39,7 +39,8 @@ Implementação de um broker MQTT com autenticação, autorização e criptograf
 `docker run --rm eclipse-mosquitto:2.0.20 sh -c "mosquitto_passwd -c -b /tmp/passwd mqttsensoruser sensor@mqtt && mosquitto_passwd -b /tmp/passwd mqttsubscriberuser subscriber@mqtt && mosquitto_passwd -b /tmp/passwd mqttadminuser admin@mqtt && cat /tmp/passwd"`
 
 ## 2. Criar ACL
-echo 'user mqttsensoruser
+
+echo user mqttsensoruser
 topic write sensor/+
 user mqttsubscriberuser
 topic read sensor/+
