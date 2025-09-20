@@ -11,36 +11,36 @@ Implementação de um broker MQTT com autenticação, autorização e criptograf
 
 ## Vulnerabilidades e Soluções
 
-## 1 - Acesso Anônimo
+### 1 - Acesso Anônimo
 - Problema: Broker aceitava conexões sem login.
 - Solução: Desativado `allow_anonymous false` e criados usuários com senha.
 
 
-## 2 - Falta de Autorização
+### 2 - Falta de Autorização
 
 - Problema: Qualquer usuário podia acessar qualquer tópico.
 - Solução: Implementada ACL com permissões específicas por usuário.
 
-## 3 - Comunicação Não Criptografada
+### 3 - Comunicação Não Criptografada
 
 - Problema: Tráfego MQTT em texto plano.
 - Solução: Habilitado TLS/SSL (porta 8883) com certificados.
 
-## 4 - Clientes Sem Autenticação
+### 4 - Clientes Sem Autenticação
 
 - Problema: Sensor e subscriber conectavam sem credenciais.
 - Solução: Código atualizado para usar usuário e senha.
 
 ## Implementação e Teste
 
-## 1. Criar usuários
+### 1. Criar usuários
 Criação de diretório de autenticação:  
 `mkdir -p mosquitto/config/auth`
 
 Comando para gerar hash de senha:  
 `docker run --rm eclipse-mosquitto:2.0.20 sh -c "mosquitto_passwd -c -b /tmp/passwd mqttsensoruser sensor@mqtt && mosquitto_passwd -b /tmp/passwd mqttsubscriberuser subscriber@mqtt && mosquitto_passwd -b /tmp/passwd mqttadminuser admin@mqtt && cat /tmp/passwd"`
 
-## 2. Criar ACL
+### 2. Criar ACL
 
 echo user mqttsensoruser  
 topic write sensor/+  
@@ -49,7 +49,7 @@ topic read sensor/+
 user mqttadminuser  
 topic readwrite #' > mosquitto/config/auth/acl
 
-## 3. Gerar certificados
+### 3. Gerar certificados
 Criar pasta onde ficará os certificados:  
 `mkdir -p mosquitto/config/certs`
 
@@ -62,7 +62,7 @@ Comandos para gerar os certificados:
 
 `openssl x509 -req -in mosquitto/config/certs/server.csr -CA mosquitto/config/certs/ca.crt -CAkey mosquitto/config/certs/ca.key -CAcreateserial -out mosquitto/config/certs/server.crt -days 365`
 
-## 4. Configuração mosquitto.conf
+### 4. Configuração mosquitto.conf
 echo 'listener 1883  
 listener 8883  
 cafile /mosquitto/config/certs/ca.crt  
@@ -72,7 +72,7 @@ allow_anonymous false
 password_file /mosquitto/config/auth/passwd  
 acl_file /mosquitto/config/auth/acl' > mosquitto/config/mosquitto.conf
 
-## 5. Subir e testar
+### 5. Subir e testar
 Iniciar o sistema:  
 `docker compose up -d --build`
 
